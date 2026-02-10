@@ -107,29 +107,3 @@ class SimpleViT(nn.Module):
         x = self.layer_norm(x)
         cls_token_final = x[:, 0]
         return self.head(cls_token_final)
-
-
-# --- Usage Example ---
-if __name__ == "__main__":
-    torch.manual_seed(42)
-    # Create the model specialized for CIFAR-10
-    model = SimpleViT(
-        img_size=32,
-        patch_size=4,  # Critical for small CIFAR images
-        n_classes=10,
-        embed_dim=128,  # Smaller dim for faster training on small data
-        depth=6,  # Fewer layers than ViT-Base
-        n_heads=4,
-    )
-
-    # Random CIFAR-10 batch: [Batch=2, Channels=3, Height=32, Width=32]
-    img = torch.randn(2, 3, 32, 32)
-
-    output = model(img)
-    print(f"Input shape: {img.shape}")
-    print(f"Output shape: {output.shape}")  # Should be [2, 10]
-    print(output)
-
-    # Count parameters
-    params = sum(p.numel() for p in model.parameters())
-    print(f"Total Parameters: {params / 1e6:.2f}M")
