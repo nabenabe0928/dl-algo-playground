@@ -13,15 +13,15 @@ def train(
     optimizer: optim.Optimizer,
     scheduler: LRScheduler,
     train_loader: torch.utils.data.DataLoader,
-    device: str = "cpu",
+    device_str: str = "cpu",
 ) -> None:
-    device = torch.device(device)
+    device = torch.device(device_str)
     criterion = nn.CrossEntropyLoss()
     model.train()
     loss_sum = 0.0
     correct = 0
     total = 0
-    
+
     for imgs, labels in tqdm(train_loader):
         imgs, labels = imgs.to(device), labels.to(device)
         optimizer.zero_grad()
@@ -36,7 +36,7 @@ def train(
         correct += preds.eq(labels).sum().item()
 
     avg_loss = loss_sum / len(train_loader)
-    accuracy = 100. * correct / total
+    accuracy = 100.0 * correct / total
     print(f"Train Loss: {avg_loss:.4f} | Acc: {accuracy:.2f}%")
 
 
@@ -53,6 +53,5 @@ def evaluate(
             total += labels.size(0)
             correct += preds.eq(labels).sum().item()
 
-    acc = 100. * correct / total
-    print(f"--> Test Accuracy: {acc:.2f}%")
-    return acc
+    acc = 100.0 * correct / total
+    print(f"--> Val. Accuracy: {acc:.2f}%")

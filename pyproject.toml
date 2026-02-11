@@ -8,6 +8,7 @@ dependencies = [
     "mypy>=1.19.1",
     "ruff>=0.15.0",
     "tqdm>=4.67.3",
+    "types-tqdm>=4.67.3.20260205",
 ]
 
 [tool.ruff]
@@ -17,6 +18,8 @@ exclude = [
     ".venv",
     ".ruff_cache",
     ".mypy_cache",
+    ".vscode",
+    "data",
 ]
 
 [tool.ruff.lint]
@@ -35,7 +38,7 @@ force-sort-within-sections = true
 order-by-type = false
 
 [tool.mypy]
-# Options configure mypy's strict mode.
+# Configure mypy's strict mode.
 warn_unused_configs = true
 disallow_untyped_calls = true
 disallow_untyped_defs = true
