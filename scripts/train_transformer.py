@@ -1,6 +1,6 @@
 from __future__ import annotations
 
-from transformer.dataset import get_data_loaders
+from cifar10.dataset import get_data_loaders
 from transformer.optim import evaluate
 from transformer.optim import train
 from transformer.model import SimpleViT
