@@ -87,7 +87,7 @@ class SimpleViT(nn.Module):
 
         # Learnable CLS token and Position Embeddings
         self.cls_token = nn.Parameter(torch.zeros(1, 1, embed_dim))
-        self.pos_embed = nn.Parameter(torch.randn(1, 1 + n_patches, embed_dim))
+        self.pos_embed = nn.Parameter(torch.zeros(1, 1 + n_patches, embed_dim))
         self.pos_drop = nn.Dropout(dropout)
 
         # Transformer Encoder Blocks
@@ -96,6 +96,20 @@ class SimpleViT(nn.Module):
         )
         self.layer_norm = nn.LayerNorm(embed_dim)
         self.head = nn.Linear(embed_dim, n_classes)
+        self._init_weights()
+
+    def _init_weights(self) -> None:
+        for m in self.modules():
+            if isinstance(m, (nn.Linear, nn.Conv2d)):
+                nn.init.trunc_normal_(m.weight, std=0.02)
+                if m.bias is not None:
+                    nn.init.constant_(m.bias, 0.0)
+            elif isinstance(m, nn.LayerNorm):
+                nn.init.constant_(m.bias, 0.0)
+                nn.init.constant_(m.weight, 1.0)
+
+        nn.init.trunc_normal_(self.cls_token, std=0.02)
+        nn.init.trunc_normal_(self.pos_embed, std=0.02)
 
     def forward(self, x: torch.Tensor) -> torch.Tensor:
         batch_size = x.shape[0]
