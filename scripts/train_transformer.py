@@ -18,6 +18,12 @@ scheduler = CosineAnnealingLR(optimizer, T_max=50, eta_min=1e-5)
 epochs = 10
 for epoch in range(epochs):
     print(f"### Epoch {epoch + 1} ###")
-    train(model=model, optimizer=optimizer, scheduler=scheduler, train_loader=train_loader)
-    evaluate(model=model, val_loader=val_loader)
+    train(
+        model=model,
+        optimizer=optimizer,
+        scheduler=scheduler,
+        train_loader=train_loader,
+        device=device,
+    )
+    evaluate(model=model, val_loader=val_loader, device=device)
     scheduler.step()

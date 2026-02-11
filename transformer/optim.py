@@ -13,9 +13,8 @@ def train(
     optimizer: optim.Optimizer,
     scheduler: LRScheduler,
     train_loader: torch.utils.data.DataLoader,
-    device_str: str = "cpu",
+    device: torch.device,
 ) -> None:
-    device = torch.device(device_str)
     criterion = nn.CrossEntropyLoss()
     model.train()
     loss_sum = 0.0
@@ -41,7 +40,7 @@ def train(
 
 
 def evaluate(
-    model: nn.Module, val_loader: torch.utils.data.DataLoader, device: str = "cpu"
+    model: nn.Module, val_loader: torch.utils.data.DataLoader, device: torch.device
 ) -> None:
     model.eval()
     correct = 0
