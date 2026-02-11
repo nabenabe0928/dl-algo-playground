@@ -28,6 +28,8 @@ class MultiHeadAttention(nn.Module):
         self.qkv = nn.Linear(embed_dim, embed_dim * 3)
         self.fc_out = nn.Linear(embed_dim, embed_dim)
         self.dropout = nn.Dropout(dropout)
+        self.save_attn = False
+        self.last_attn_weights: torch.Tensor | None = None
 
     def forward(self, x: torch.Tensor) -> torch.Tensor:
         # (batch_size, n_tokens, embed_dim) --> (batch_size, n_tokens, embed_dim)
@@ -42,6 +44,9 @@ class MultiHeadAttention(nn.Module):
         # attn.shape == (batch_size, n_heads, n_tokens, n_tokens)
         attn = ((q @ k.transpose(-2, -1)) * self.scale).softmax(dim=-1)
         attn = self.dropout(attn)
+        if self.save_attn:
+            self.last_attn_weights = attn.clone()
+
         out = (attn @ v).transpose(1, 2).reshape(batch_size, n_tokens, self.embed_dim)
         return self.fc_out(out)
 
